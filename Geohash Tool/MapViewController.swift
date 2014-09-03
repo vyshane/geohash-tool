@@ -15,7 +15,6 @@ class MapViewController: NSViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         mapView.showsUserLocation = true;
     }
 
@@ -26,12 +25,8 @@ class MapViewController: NSViewController {
     }
 
     @IBAction func zoomToCurrentLocation(sender: NSButton) {
-        let spanX = 0.00725
-        let spanY = 0.00725
-
-        let region = MKCoordinateRegion(center: mapView.userLocation.coordinate,
-            span: MKCoordinateSpan(latitudeDelta: spanX, longitudeDelta: spanY))
-
+        let span = MKCoordinateSpan(latitudeDelta: 0.00725, longitudeDelta: 0.00725)
+        let region = MKCoordinateRegion(center: mapView.userLocation.coordinate, span: span)
         mapView.setRegion(region, animated: true)
     }
 }
