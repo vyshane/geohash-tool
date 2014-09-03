@@ -12,17 +12,26 @@ import MapKit
 class MapViewController: NSViewController {
 
     @IBOutlet weak var mapView: MKMapView!
-                            
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
-                                    
+        mapView.showsUserLocation = true;
     }
 
     override var representedObject: AnyObject? {
         didSet {
         // Update the view, if already loaded.
         }
+    }
+
+    @IBAction func zoomToCurrentLocation(sender: NSButton) {
+        let spanX = 0.00725
+        let spanY = 0.00725
+
+        let region = MKCoordinateRegion(center: mapView.userLocation.coordinate,
+            span: MKCoordinateSpan(latitudeDelta: spanX, longitudeDelta: spanY))
+
+        mapView.setRegion(region, animated: true)
     }
 }
