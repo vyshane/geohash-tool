@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>6D1A6ABF-F101-4A6D-933D-B5C5F8F90FA7</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Geohash Tool</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>88E06243538A61C38FF23A4147FB87A89ACE365B</key>
+		<string>https://github.com/vyshane/geohash-tool.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Geohash Tool.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>88E06243538A61C38FF23A4147FB87A89ACE365B</key>
+		<string>..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/vyshane/geohash-tool.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>88E06243538A61C38FF23A4147FB87A89ACE365B</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>88E06243538A61C38FF23A4147FB87A89ACE365B</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Geohash%20Tool</string>
+		</dict>
+	</array>
+</dict>
+</plist>

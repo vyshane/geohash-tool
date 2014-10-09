@@ -10,6 +10,10 @@ struct GeohashEncoding {
 
     private static let base32Encoding = "0123456789bcdefghjkmnpqrstuvwxyz"
 
+    static func isValidString(string: String) -> Bool {
+        return true
+    }
+
     static func valueForCharacter(character: Character) -> Result<Int> {
         if let characterIndex = find(base32Encoding, character) {
             return .Ok(distance(base32Encoding.startIndex, characterIndex))

@@ -104,7 +104,7 @@
 		34A7CBAF19B75FE80012606F /* Geohash Tool */ = {
 			isa = PBXGroup;
 			children = (
-				34BAF16419B8A1FF00B00AF8 /* Geohash */,
+				34BAF16419B8A1FF00B00AF8 /* GeohashKit */,
 				34A7CBD319B7665F0012606F /* Geohash Tool.entitlements */,
 				34A7CBB419B75FE80012606F /* MapViewController.swift */,
 				34A7CBB619B75FE80012606F /* AppDelegate.swift */,
@@ -143,7 +143,7 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		34BAF16419B8A1FF00B00AF8 /* Geohash */ = {
+		34BAF16419B8A1FF00B00AF8 /* GeohashKit */ = {
 			isa = PBXGroup;
 			children = (
 				34BAF16519B8A24E00B00AF8 /* Geohash.swift */,
@@ -153,7 +153,7 @@
 				3492CA9419DA723D005173BB /* Result.swift */,
 				34C3150519DABA4000F968D8 /* GeohashError.swift */,
 			);
-			name = Geohash;
+			name = GeohashKit;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
