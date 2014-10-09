@@ -10,7 +10,12 @@ struct GeohashEncoding {
 
     private static let base32Encoding = "0123456789bcdefghjkmnpqrstuvwxyz"
 
-    static func isValidString(string: String) -> Bool {
+    static func isDecodableString(string: String) -> Bool {
+        for character in string {
+            if find(base32Encoding, character) == nil {
+                return false
+            }
+        }
         return true
     }
 

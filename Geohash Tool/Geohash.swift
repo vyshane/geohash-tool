@@ -12,7 +12,7 @@ public struct Geohash {
     private let bits = [16, 8, 4, 2, 1]
 
     public init(fromString: String) {
-        assert(GeohashEncoding.isValidString(fromString), "String contains invalid characters")
+        assert(GeohashEncoding.isDecodableString(fromString), "String contains invalid characters")
         stringValue = fromString
     }
 

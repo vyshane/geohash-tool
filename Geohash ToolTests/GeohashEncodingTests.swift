@@ -12,6 +12,13 @@ import Cocoa
 import XCTest
 
 class GeohashEncodingTests: XCTestCase {
+
+    func testIsValidString() {
+        XCTAssert(GeohashEncoding.isDecodableString("0123456789bcdefghjkmnpqrstuvwxyz"),
+            "\"0123456789bcdefghjkmnpqrstuvwxyz\" is a valid Geohash string")
+        XCTAssert(!GeohashEncoding.isDecodableString("ailo"),
+            "\"ailo\" is not a valid Geohash string")
+    }
     
     func testValueForCharacter() {
         switch GeohashEncoding.valueForCharacter("0") {
