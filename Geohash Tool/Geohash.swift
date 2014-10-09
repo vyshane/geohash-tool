@@ -8,6 +8,7 @@
 import CoreLocation
 
 public struct Geohash {
+
     public let stringValue: String;
     private let bits = [16, 8, 4, 2, 1]
 

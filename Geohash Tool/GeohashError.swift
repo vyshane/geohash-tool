@@ -11,8 +11,6 @@ import Foundation
 enum GeohashError: Int {
     case GeohashEncodingInvalidCharacter = 100
     case GeohashEncodingNonBase32Value
-    case GeohashInvalid = 200
-    case GeohashInvalidLocation
 
     func error() -> NSError {
         return NSError(domain: "GeohashErrorDomain", code: self.rawValue, userInfo: nil);
