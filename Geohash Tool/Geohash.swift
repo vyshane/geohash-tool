@@ -7,12 +7,15 @@
 
 import CoreLocation
 
-public struct Geohash {
+public struct Geohash: Equatable {
 
     public let stringValue: String;
     static let encoding = HashEncoding("0123456789bcdefghjkmnpqrstuvwxyz")
     private let bits = [16, 8, 4, 2, 1]
     private let precision: Double = 0.000000000001
+
+
+    // MARK: - Initializers
 
     public init(_ value: String) {
         assert(!value.isEmpty, "String cannot be empty")
@@ -73,6 +76,8 @@ public struct Geohash {
         stringValue = geohash
     }
 
+    // MARK: - Decode Geohash
+
     public func location() -> CLLocationCoordinate2D {
 
         func refineInterval(interval: (CLLocationDegrees, CLLocationDegrees),
@@ -113,33 +118,8 @@ public struct Geohash {
         )
     }
 
-    private static func longitudeTo180(longitude: CLLocationDegrees) -> CLLocationDegrees {
-        if longitude < 0 {
-            return -longitudeTo180(abs(longitude))
-        } else {
-            if longitude > 180 {
-                return longitude - round(floor((longitude + 180) / 360.0)) * 360
-            } else {
-                return longitude
-            }
-        }
-    }
 
-    public func right() -> Geohash {
-        return geohashAtDirection(Direction.Right)
-    }
-
-    public func left() -> Geohash {
-        return geohashAtDirection(Direction.Left)
-    }
-
-    public func top() -> Geohash {
-        return geohashAtDirection(Direction.Top)
-    }
-
-    public func bottom() -> Geohash {
-        return geohashAtDirection(Direction.Bottom)
-    }
+    // MARK: - Find Adjacent Geohashes
 
     public func geohashAtDirection(direction: Direction) -> Geohash {
         let source = self.location()
@@ -160,7 +140,8 @@ public struct Geohash {
                 return Geohash(location:adjacent, length: hashLength)
             }
         } else {
-            let lastCharacter = Character(stringValue.substringFromIndex(stringValue.endIndex))
+            let lastCharacter = Character(stringValue.substringFromIndex(
+                stringValue.endIndex.predecessor()))
             let parity = Parity(forLength: hashLength)
             var base = Geohash(stringValue.substringToIndex(stringValue.endIndex.predecessor()))
             let borderEncoding = borderEncodingForDirection(direction, parity: parity)
@@ -192,6 +173,43 @@ public struct Geohash {
         }
     }
 
+    public func right() -> Geohash {
+        return geohashAtDirection(Direction.Right)
+    }
+
+    public func left() -> Geohash {
+        return geohashAtDirection(Direction.Left)
+    }
+
+    public func top() -> Geohash {
+        return geohashAtDirection(Direction.Top)
+    }
+
+    public func bottom() -> Geohash {
+        return geohashAtDirection(Direction.Bottom)
+    }
+
+
+    // MARK: - Utility Methods
+
+    private static func longitudeTo180(longitude: CLLocationDegrees) -> CLLocationDegrees {
+        if longitude < 0 {
+            return -longitudeTo180(abs(longitude))
+        } else {
+            if longitude > 180 {
+                return longitude - round(floor((longitude + 180) / 360.0)) * 360
+            } else {
+                return longitude
+            }
+        }
+    }
+
+    private func widthForHashLength(hashLength: Int) -> CLLocationDegrees {
+        // TODO: Cache results of following calculation?
+        let a = (hashLength % 2 == 0 ? -1 : -0.5)
+        return pow(2, 2.5 * Double(hashLength) + a)
+    }
+
     private func isLocation(location: CLLocationCoordinate2D, atBorderInDirection: Direction,
             forHashLength: Int) -> Bool {
 
@@ -207,12 +225,6 @@ public struct Geohash {
         case .Bottom:
             return abs(location.latitude - width / 2 + 90) < precision
         }
-    }
-
-    private func widthForHashLength(hashLength: Int) -> CLLocationDegrees {
-        // TODO: Cache results of following calculation?
-        let a = (hashLength % 2 == 0 ? -1 : -0.5)
-        return pow(2, 2.5 * Double(hashLength) + a)
     }
 
     private func neighborEncodingForDirection(direction: Direction, parity: Parity)
@@ -258,4 +270,11 @@ public struct Geohash {
             return borderEncodingForDirection(Direction.Left, parity: Parity.Even)
         }
     }
+}
+
+
+// MARK: - Equatable
+
+public func ==(lhs: Geohash, rhs: Geohash) -> Bool {
+    return lhs.stringValue == rhs.stringValue
 }
