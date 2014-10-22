@@ -13,7 +13,7 @@ import CoreLocation
 class GeohashTests: XCTestCase {
 
     func testDecode() {
-        let geohash = Geohash(fromString: "qd66hrhk")
+        let geohash = Geohash("qd66hrhk")
         let location = geohash.location()
 
         XCTAssert(String(format: "%.3f", location.latitude) == "-31.953"
@@ -23,9 +23,11 @@ class GeohashTests: XCTestCase {
 
     func testEncode() {
         let location = CLLocationCoordinate2D(latitude: -31.953, longitude: 115.857)
-        let geohash = Geohash(fromLocation: location, length: 8)
+        let geohash = Geohash(location: location, length: 8)
 
         XCTAssert(geohash.stringValue == "qd66hrhk",
             "Encoding latitude -31.953 and longitude 115.857 " + "should result in \"qd66hrhk\"")
     }
+
+    // TODO: Write tests for Geohash.geohashAtDirection(direction: Direction) -> Geohash.
 }

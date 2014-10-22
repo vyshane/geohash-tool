@@ -10,20 +10,23 @@ import CoreLocation
 public struct Geohash {
 
     public let stringValue: String;
+    static let encoding = HashEncoding("0123456789bcdefghjkmnpqrstuvwxyz")
     private let bits = [16, 8, 4, 2, 1]
+    private let precision: Double = 0.000000000001
 
-    public init(fromString: String) {
-        assert(GeohashEncoding.isDecodableString(fromString), "String contains invalid characters")
-        stringValue = fromString
+    public init(_ value: String) {
+        assert(!value.isEmpty, "String cannot be empty")
+        assert(Geohash.encoding.isDecodableString(value), "String contains invalid characters")
+        stringValue = value.lowercaseString
     }
 
-    public init(fromLocation: CLLocationCoordinate2D, length: Int) {
+    public init(location: CLLocationCoordinate2D, length: Int) {
         assert(length > 0, "length must be a positive integer")
-        assert(fromLocation.latitude >= -90 && fromLocation.latitude <= 90,
+        assert(location.latitude >= -90 && location.latitude <= 90,
             "latitude of location must be between -90 and 90 inclusive")
 
-        let longitude = Geohash.longitudeTo180(fromLocation.longitude)
-        let latitude = fromLocation.latitude
+        let longitude = Geohash.longitudeTo180(location.longitude)
+        let latitude = location.latitude
         var isEven = true
         var latitudeInterval = (-90.0, 90.0)
         var longitudeInterval = (-180.0, 180.0)
@@ -51,13 +54,13 @@ public struct Geohash {
             }
             isEven = !isEven
 
-            if bit < 4 {
+            if bit < bits.count - 1 {
                 ++bit
             } else {
-                switch GeohashEncoding.characterForValue(characterIndex) {
+                switch Geohash.encoding.characterForValue(characterIndex) {
                 case .Ok(let character):
                     geohash.append(character())
-                case .Error(let error):
+                case .Error(_):
                     // This shouldn't happen.
                     NSException(name: "GeohashEncodingException",
                         reason: "Unable to encode non-base32 value", userInfo: nil).raise()
@@ -88,7 +91,7 @@ public struct Geohash {
         var longitudeInterval = (-180.0, 180.0)
 
         for character in stringValue {
-            switch GeohashEncoding.valueForCharacter(character) {
+            switch Geohash.encoding.valueForCharacter(character) {
             case .Ok(let value):
                 for mask in bits {
                     if isEven {
@@ -122,48 +125,137 @@ public struct Geohash {
         }
     }
 
-    // Used in adjacent hash calculations.
-    private func neighborForDirection(direction: Direction, parity: Parity) -> String {
-        switch (direction, parity) {
-        case (Direction.Right, Parity.Even):
-            return "bc01fg45238967deuvhjyznpkmstqrwx"
-        case (Direction.Left, Parity.Even):
-            return "238967debc01fg45kmstqrwxuvhjyznp"
-        case (Direction.Top, Parity.Even):
-            return "p0r21436x8zb9dcf5h7kjnmqesgutwvy"
-        case (Direction.Bottom, Parity.Even):
-            return "14365h7k9dcfesgujnmqp0r2twvyx8zb"
-        case (Direction.Right, Parity.Odd):
-            return neighborForDirection(Direction.Top, parity: Parity.Even)
-        case (Direction.Left, Parity.Odd):
-            return neighborForDirection(Direction.Bottom, parity: Parity.Even)
-        case (Direction.Top, Parity.Odd):
-            return neighborForDirection(Direction.Right, parity: Parity.Even)
-        case (Direction.Bottom, Parity.Odd):
-            return neighborForDirection(Direction.Left, parity: Parity.Even)
+    public func right() -> Geohash {
+        return geohashAtDirection(Direction.Right)
+    }
+
+    public func left() -> Geohash {
+        return geohashAtDirection(Direction.Left)
+    }
+
+    public func top() -> Geohash {
+        return geohashAtDirection(Direction.Top)
+    }
+
+    public func bottom() -> Geohash {
+        return geohashAtDirection(Direction.Bottom)
+    }
+
+    public func geohashAtDirection(direction: Direction) -> Geohash {
+        let source = self.location()
+        let hashLength = countElements(stringValue)
+
+        if isLocation(source, atBorderInDirection: direction, forHashLength: hashLength) {
+            switch direction {
+            case .Right:
+                let adjacent = CLLocationCoordinate2D(latitude: source.latitude, longitude: -180)
+                return Geohash(location:adjacent, length: hashLength)
+            case .Left:
+                let adjacent = CLLocationCoordinate2D(latitude: source.latitude, longitude: 180)
+                return Geohash(location:adjacent, length: hashLength)
+            case _:
+                // Top or bottom.
+                let adjacent = CLLocationCoordinate2D(latitude: source.latitude,
+                    longitude: source.longitude + 180)
+                return Geohash(location:adjacent, length: hashLength)
+            }
+        } else {
+            let lastCharacter = Character(stringValue.substringFromIndex(stringValue.endIndex))
+            let parity = Parity(forLength: hashLength)
+            var base = Geohash(stringValue.substringToIndex(stringValue.endIndex.predecessor()))
+            let borderEncoding = borderEncodingForDirection(direction, parity: parity)
+
+            if borderEncoding.isDecodableString(String(lastCharacter)) {
+                base = base.geohashAtDirection(direction)
+            }
+
+            switch neighborEncodingForDirection(direction, parity: parity)
+                .valueForCharacter(lastCharacter) {
+
+            case .Ok(let neighborValue):
+                switch Geohash.encoding.characterForValue(neighborValue()) {
+                case .Ok(let base32Character):
+                    base = Geohash(base.stringValue + String(base32Character()))
+                case .Error(let error):
+                    // This shouldn't happen.
+                    NSException(name: "GeohashEncodingException",
+                        reason: "Unable to encode Geohash from non-base32 value",
+                        userInfo: nil).raise()
+                }
+
+            case .Error(_):
+                // This shouldn't happen.
+                NSException(name: "GeohashEncodingException",
+                    reason: "Unable to decode neighbor value", userInfo: nil).raise()
+            }
+            return base
         }
     }
 
-    // Used in border hash calculations.
-    private func borderForDirection(direction: Direction, parity: Parity) -> String {
-        switch (direction, parity) {
-        case (Direction.Right, Parity.Even):
-            return "bcfguvyz"
-        case (Direction.Left, Parity.Even):
-            return "0145hjnp"
-        case (Direction.Top, Parity.Even):
-            return "prxz"
-        case (Direction.Bottom, Parity.Even):
-            return "028b"
-        case (Direction.Right, Parity.Odd):
-            return borderForDirection(Direction.Top, parity: Parity.Even)
-        case (Direction.Left, Parity.Odd):
-            return borderForDirection(Direction.Bottom, parity: Parity.Even)
-        case (Direction.Top, Parity.Odd):
-            return borderForDirection(Direction.Right, parity: Parity.Even)
-        case (Direction.Bottom, Parity.Odd):
-            return borderForDirection(Direction.Left, parity: Parity.Even)
+    private func isLocation(location: CLLocationCoordinate2D, atBorderInDirection: Direction,
+            forHashLength: Int) -> Bool {
+
+        let width = widthForHashLength(forHashLength)
+
+        switch (atBorderInDirection) {
+        case .Right:
+            return abs(location.longitude + width / 2 - 180.0) < precision
+        case .Left:
+            return abs(location.longitude - width / 2 + 180) < precision
+        case .Top:
+            return abs(location.latitude + width / 2 - 90) < precision
+        case .Bottom:
+            return abs(location.latitude - width / 2 + 90) < precision
         }
     }
 
+    private func widthForHashLength(hashLength: Int) -> CLLocationDegrees {
+        // TODO: Cache results of following calculation?
+        let a = (hashLength % 2 == 0 ? -1 : -0.5)
+        return pow(2, 2.5 * Double(hashLength) + a)
+    }
+
+    private func neighborEncodingForDirection(direction: Direction, parity: Parity)
+            -> HashEncoding {
+        switch (direction, parity) {
+        case (Direction.Right, Parity.Even):
+            return HashEncoding("bc01fg45238967deuvhjyznpkmstqrwx")
+        case (Direction.Left, Parity.Even):
+            return HashEncoding("238967debc01fg45kmstqrwxuvhjyznp")
+        case (Direction.Top, Parity.Even):
+            return HashEncoding("p0r21436x8zb9dcf5h7kjnmqesgutwvy")
+        case (Direction.Bottom, Parity.Even):
+            return HashEncoding("14365h7k9dcfesgujnmqp0r2twvyx8zb")
+        case (Direction.Right, Parity.Odd):
+            return neighborEncodingForDirection(Direction.Top, parity: Parity.Even)
+        case (Direction.Left, Parity.Odd):
+            return neighborEncodingForDirection(Direction.Bottom, parity: Parity.Even)
+        case (Direction.Top, Parity.Odd):
+            return neighborEncodingForDirection(Direction.Right, parity: Parity.Even)
+        case (Direction.Bottom, Parity.Odd):
+            return neighborEncodingForDirection(Direction.Left, parity: Parity.Even)
+        }
+    }
+
+    private func borderEncodingForDirection(direction: Direction, parity: Parity)
+            -> HashEncoding {
+        switch (direction, parity) {
+        case (Direction.Right, Parity.Even):
+            return HashEncoding("bcfguvyz")
+        case (Direction.Left, Parity.Even):
+            return HashEncoding("0145hjnp")
+        case (Direction.Top, Parity.Even):
+            return HashEncoding("prxz")
+        case (Direction.Bottom, Parity.Even):
+            return HashEncoding("028b")
+        case (Direction.Right, Parity.Odd):
+            return borderEncodingForDirection(Direction.Top, parity: Parity.Even)
+        case (Direction.Left, Parity.Odd):
+            return borderEncodingForDirection(Direction.Bottom, parity: Parity.Even)
+        case (Direction.Top, Parity.Odd):
+            return borderEncodingForDirection(Direction.Right, parity: Parity.Even)
+        case (Direction.Bottom, Parity.Odd):
+            return borderEncodingForDirection(Direction.Left, parity: Parity.Even)
+        }
+    }
 }

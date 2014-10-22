@@ -8,4 +8,12 @@
 
 enum Parity {
     case Odd, Even
+
+    init(forLength: Int) {
+        if forLength % 2 == 0 {
+            self = .Even
+        } else {
+            self = .Odd
+        }
+    }
 }

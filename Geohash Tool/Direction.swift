@@ -6,6 +6,6 @@
 //  Copyright (c) 2014 Vy-Shane Sin Fat. All rights reserved.
 //
 
-enum Direction {
+public enum Direction {
     case Top, Bottom, Right, Left
 }
