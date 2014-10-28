@@ -14,18 +14,18 @@ class GeohashTests: XCTestCase {
 
     func testDecode() {
         let geohash = Geohash("qd66hrhk")
-        let location = geohash.location()
+        let center = geohash.center()
 
-        XCTAssert(String(format: "%.3f", location.latitude) == "-31.953"
-            && String(format: "%.3f", location.longitude) == "115.857",
+        XCTAssert(String(format: "%.3f", center.latitude) == "-31.953"
+            && String(format: "%.3f", center.longitude) == "115.857",
             "Decoding \"qd66hrhk\" should result in lat -31.953 and lon 115.857")
     }
 
     func testEncode() {
         let location = CLLocationCoordinate2D(latitude: -31.953, longitude: 115.857)
-        let geohash = Geohash(location: location, length: 8)
+        let geohash = Geohash(center: location, length: 8)
 
-        XCTAssert(geohash.hash == "qd66hrhk",
+        XCTAssert(geohash.hash() == "qd66hrhk",
             "Encoding latitude -31.953 and longitude 115.857 " + "should result in \"qd66hrhk\"")
     }
 
