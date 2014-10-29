@@ -203,7 +203,7 @@ public struct Geohash: Equatable {
     }
 
 
-    // MARK: - Box Size
+    // MARK: - Bounding Box
 
     public func width() -> CLLocationDegrees {
         return Geohash.widthForHashLength(self.length())
@@ -221,6 +221,13 @@ public struct Geohash: Equatable {
     public static func heightForHashLength(hashLength: Int) -> CLLocationDegrees {
         let a = (hashLength % 2 == 0 ? 0 : -0.5)
         return 180 / pow(2, 2.5 * Double(hashLength) + a)
+    }
+
+    public func containsLocation(location: CLLocationCoordinate2D) -> Bool {
+        let containsLatitude = abs(self.center().latitude - location.latitude) <= self.height() / 2
+        let containsLongitude = abs(Geohash.longitudeTo180(self.center().longitude -
+            location.longitude)) <= self.width() / 2
+        return containsLatitude && containsLongitude
     }
 
 

@@ -67,7 +67,7 @@ class GeohashTests: XCTestCase {
     }
 
 
-    // MARK: - Box Size
+    // MARK: - Bounding Box
 
     func testWidthForHashLength() {
         XCTAssertEqualWithAccuracy(Geohash.widthForHashLength(1), 45.0, 0.00001)
@@ -85,5 +85,30 @@ class GeohashTests: XCTestCase {
         XCTAssertEqualWithAccuracy(Geohash.heightForHashLength(4), 0.3515625 / 2, 0.00001)
         XCTAssertEqualWithAccuracy(Geohash.heightForHashLength(5), 0.0439453125, 0.00001)
         XCTAssertEqualWithAccuracy(Geohash.heightForHashLength(6), 0.010986328125 / 2, 0.00001)
+    }
+
+    func testContainsLocation() {
+        let geohash = Geohash("dre7")
+        let center = geohash.center()
+        XCTAssertTrue(geohash.containsLocation(center), "Geohash contains own center")
+
+        let location2 = CLLocationCoordinate2D(latitude: center.latitude + 20,
+            longitude: center.longitude)
+        XCTAssertFalse(geohash.containsLocation(location2))
+
+        let location3 = CLLocationCoordinate2D(latitude: center.latitude,
+            longitude: center.longitude + 20)
+        XCTAssertFalse(geohash.containsLocation(location3))
+    }
+
+    func testContainsNearLongitudeBoundary() {
+        let geohash = Geohash(
+            center: CLLocationCoordinate2D(latitude: -25, longitude: -179), length: 1)
+
+        XCTAssertFalse(geohash.containsLocation(
+            CLLocationCoordinate2D(latitude: -25, longitude: -179)))
+
+        XCTAssertTrue(geohash.containsLocation(
+            CLLocationCoordinate2D(latitude: -25, longitude: -178)))
     }
 }
