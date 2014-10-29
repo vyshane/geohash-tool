@@ -16,7 +16,7 @@ class GeohashTests: XCTestCase {
 
     func testEncode() {
         let location = CLLocationCoordinate2D(latitude: -31.953, longitude: 115.857)
-        let geohash = Geohash(center: location, length: 8)
+        let geohash = Geohash(location: location, length: 8)
 
         XCTAssert(geohash.hash() == "qd66hrhk",
             "Encoding latitude -31.953 and longitude 115.857 " + "should result in \"qd66hrhk\"")
@@ -103,10 +103,10 @@ class GeohashTests: XCTestCase {
 
     func testContainsNearLongitudeBoundary() {
         let geohash = Geohash(
-            center: CLLocationCoordinate2D(latitude: -25, longitude: -179), length: 1)
+            location: CLLocationCoordinate2D(latitude: -25, longitude: -179), length: 1)
 
         XCTAssertFalse(geohash.containsLocation(
-            CLLocationCoordinate2D(latitude: -25, longitude: -179)))
+            CLLocationCoordinate2D(latitude: -25, longitude: 179)))
 
         XCTAssertTrue(geohash.containsLocation(
             CLLocationCoordinate2D(latitude: -25, longitude: -178)))
