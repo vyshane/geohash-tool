@@ -12,7 +12,7 @@ lengths of geohash. Cell dimensions vary with latitude and so the table is for
 the worst-case scenario at the equator.
 
 | Geohash length | Area width x height   |
-| -------------------------------------- |
+| -------------- | --------------------- |
 | 1              | 5,009.4km x 4,992.6km |
 | 2              | 1,252.3km x 624.1km   |
 | 3              | 156.5km x 156km       |
