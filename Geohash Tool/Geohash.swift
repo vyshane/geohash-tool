@@ -40,7 +40,7 @@ public struct Geohash: Equatable {
     }
 
 
-    // MARK: - Geohash Translation
+    // MARK: - Geohash Encoding and Decoding
 
     public static func encodeLocation(center: CLLocationCoordinate2D, hashLength: Int) -> String {
         let longitude = Geohash.longitudeTo180(center.longitude)
@@ -131,7 +131,7 @@ public struct Geohash: Equatable {
     }
 
 
-    // MARK: - Find Adjacent Geohashes
+    // MARK: - Finding Adjacent Geohashes
 
     public func neighborAtDirection(direction: Direction) -> Geohash {
         let hash = self.hash()
@@ -203,6 +203,27 @@ public struct Geohash: Equatable {
     }
 
 
+    // MARK: - Box Size
+
+    public func width() -> CLLocationDegrees {
+        return Geohash.widthForHashLength(self.length())
+    }
+
+    public static func widthForHashLength(hashLength: Int) -> CLLocationDegrees {
+        let a = (hashLength % 2 == 0 ? -1 : -0.5)
+        return 180 / pow(2, 2.5 * Double(hashLength) + a)
+    }
+
+    public func height() -> CLLocationDegrees {
+        return Geohash.heightForHashLength(self.length())
+    }
+
+    public static func heightForHashLength(hashLength: Int) -> CLLocationDegrees {
+        let a = (hashLength % 2 == 0 ? 0 : -0.5)
+        return 180 / pow(2, 2.5 * Double(hashLength) + a)
+    }
+
+
     // MARK: - Utility Methods
 
     private static func longitudeTo180(longitude: CLLocationDegrees) -> CLLocationDegrees {
@@ -217,16 +238,10 @@ public struct Geohash: Equatable {
         }
     }
 
-    private func widthForHashLength(hashLength: Int) -> CLLocationDegrees {
-        // TODO: Cache results of following calculation?
-        let a = (hashLength % 2 == 0 ? -1 : -0.5)
-        return pow(2, 2.5 * Double(hashLength) + a)
-    }
-
     private func isLocation(location: CLLocationCoordinate2D, atBorderInDirection: Direction,
             forHashLength: Int) -> Bool {
 
-        let width = widthForHashLength(forHashLength)
+        let width = Geohash.widthForHashLength(forHashLength)
 
         switch (atBorderInDirection) {
         case .Right:

@@ -12,6 +12,16 @@ import CoreLocation
 
 class GeohashTests: XCTestCase {
 
+    // MARK: - Geohash Encoding and Decoding
+
+    func testEncode() {
+        let location = CLLocationCoordinate2D(latitude: -31.953, longitude: 115.857)
+        let geohash = Geohash(center: location, length: 8)
+
+        XCTAssert(geohash.hash() == "qd66hrhk",
+            "Encoding latitude -31.953 and longitude 115.857 " + "should result in \"qd66hrhk\"")
+    }
+
     func testDecode() {
         let geohash = Geohash("qd66hrhk")
         let center = geohash.center()
@@ -21,13 +31,8 @@ class GeohashTests: XCTestCase {
             "Decoding \"qd66hrhk\" should result in lat -31.953 and lon 115.857")
     }
 
-    func testEncode() {
-        let location = CLLocationCoordinate2D(latitude: -31.953, longitude: 115.857)
-        let geohash = Geohash(center: location, length: 8)
 
-        XCTAssert(geohash.hash() == "qd66hrhk",
-            "Encoding latitude -31.953 and longitude 115.857 " + "should result in \"qd66hrhk\"")
-    }
+    // MARK: - Finding Adjacent Geohashes
 
     func testGeohashAtDirectionRight() {
         XCTAssert(Geohash("u1pb").neighborAtDirection(Direction.Right) == Geohash("u300"),
@@ -59,5 +64,26 @@ class GeohashTests: XCTestCase {
 
         XCTAssert(Geohash("u1pb").bottomNeighbor() == Geohash("u0zz"),
             "Geohash at the bottom of u1pb is u0zz")
+    }
+
+
+    // MARK: - Box Size
+
+    func testWidthForHashLength() {
+        XCTAssertEqualWithAccuracy(Geohash.widthForHashLength(1), 45.0, 0.00001)
+        XCTAssertEqualWithAccuracy(Geohash.widthForHashLength(2), 11.25, 0.00001)
+        XCTAssertEqualWithAccuracy(Geohash.widthForHashLength(3), 1.40625, 0.00001)
+        XCTAssertEqualWithAccuracy(Geohash.widthForHashLength(4), 0.3515625, 0.00001)
+        XCTAssertEqualWithAccuracy(Geohash.widthForHashLength(5), 0.0439453125, 0.00001)
+        XCTAssertEqualWithAccuracy(Geohash.widthForHashLength(6), 0.010986328125, 0.00001)
+    }
+
+    func testHeightForHashLength() {
+        XCTAssertEqualWithAccuracy(Geohash.heightForHashLength(1), 45.0, 0.00001)
+        XCTAssertEqualWithAccuracy(Geohash.heightForHashLength(2), 11.25 / 2, 0.00001)
+        XCTAssertEqualWithAccuracy(Geohash.heightForHashLength(3), 1.40625, 0.00001)
+        XCTAssertEqualWithAccuracy(Geohash.heightForHashLength(4), 0.3515625 / 2, 0.00001)
+        XCTAssertEqualWithAccuracy(Geohash.heightForHashLength(5), 0.0439453125, 0.00001)
+        XCTAssertEqualWithAccuracy(Geohash.heightForHashLength(6), 0.010986328125 / 2, 0.00001)
     }
 }
