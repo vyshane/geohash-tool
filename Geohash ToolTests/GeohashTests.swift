@@ -15,55 +15,51 @@ class GeohashTests: XCTestCase {
     // MARK: - Geohash Encoding and Decoding
 
     func testEncode() {
-        let location = CLLocationCoordinate2D(latitude: -31.953, longitude: 115.857)
-        let geohash = Geohash(location: location, length: 8)
+        let perthLocation = CLLocationCoordinate2D(latitude: -31.953, longitude: 115.857)
+        if let perthGeohash = Geohash(location: perthLocation, length: 8) {
+            XCTAssert(perthGeohash.hash() == "qd66hrhk")
+        } else {
+            XCTFail("Could not initialize geohash")
+        }
 
-        XCTAssert(geohash.hash() == "qd66hrhk",
-            "Encoding latitude -31.953 and longitude 115.857 " + "should result in \"qd66hrhk\"")
+        let whiteHouseLocation = CLLocationCoordinate2D(latitude: 38.89710201881826,
+            longitude: -77.03669792041183)
+        XCTAssert(Geohash.encodeLocation(whiteHouseLocation, hashLength: 12) == "dqcjqcp84c6e")
     }
 
     func testDecode() {
-        let geohash = Geohash("qd66hrhk")
-        let center = geohash.center()
+        let perthGeohash = Geohash("qd66hrhk")
+        XCTAssertEqual(String(format: "%.3f", perthGeohash!.center().latitude) == "-31.953",
+            String(format: "%.3f", perthGeohash!.center().longitude) == "115.857")
 
-        XCTAssert(String(format: "%.3f", center.latitude) == "-31.953"
-            && String(format: "%.3f", center.longitude) == "115.857",
-            "Decoding \"qd66hrhk\" should result in lat -31.953 and lon 115.857")
+        let whiteHouseLocation = CLLocationCoordinate2D(latitude: 38.89710201881826,
+            longitude: -77.03669792041183)
+        let decodedLocation = Geohash.decodeHash("dqcjqcp84c6e")
+        XCTAssertEqual(whiteHouseLocation.latitude, decodedLocation.latitude)
+        XCTAssertEqual(whiteHouseLocation.longitude, decodedLocation.longitude)
     }
 
 
     // MARK: - Finding Adjacent Geohashes
 
     func testGeohashAtDirectionRight() {
-        XCTAssert(Geohash("u1pb").neighborAtDirection(Direction.Right) == Geohash("u300"),
-            "Geohash at the right of u1pb is u300")
-
-        XCTAssert(Geohash("u1pb").rightNeighbor() == Geohash("u300"),
-            "Geohash at the right of u1pb is u300")
+        XCTAssertEqual(Geohash("u1pb")!.neighborAtDirection(Direction.Right), Geohash("u300")!)
+        XCTAssertEqual(Geohash("u1pb")!.rightNeighbor(), Geohash("u300")!)
     }
 
     func testGeohashAtDirectionLeft() {
-        XCTAssert(Geohash("u1pb").neighborAtDirection(Direction.Left) == Geohash("u1p8"),
-            "Geohash at the left of u1pb is u1p8")
-
-        XCTAssert(Geohash("u1pb").leftNeighbor() == Geohash("u1p8"),
-            "Geohash at the left of u1pb is u1p8")
+        XCTAssertEqual(Geohash("u1pb")!.neighborAtDirection(Direction.Left), Geohash("u1p8")!)
+        XCTAssertEqual(Geohash("u1pb")!.leftNeighbor(), Geohash("u1p8")!)
     }
 
     func testGeohashAtDirectionTop() {
-        XCTAssert(Geohash("u1pb").neighborAtDirection(Direction.Top) == Geohash("u1pc"),
-            "Geohash at the top of u1pb is u1pc")
-
-        XCTAssert(Geohash("u1pb").topNeighbor() == Geohash("u1pc"),
-            "Geohash at the top of u1pb is u1pc")
+        XCTAssertEqual(Geohash("u1pb")!.neighborAtDirection(Direction.Top), Geohash("u1pc")!)
+        XCTAssertEqual(Geohash("u1pb")!.topNeighbor(), Geohash("u1pc")!)
     }
 
     func testGeohashAtDirectionBottom() {
-        XCTAssert(Geohash("u1pb").neighborAtDirection(Direction.Bottom) == Geohash("u0zz"),
-            "Geohash at the bottom of u1pb is u0zz")
-
-        XCTAssert(Geohash("u1pb").bottomNeighbor() == Geohash("u0zz"),
-            "Geohash at the bottom of u1pb is u0zz")
+        XCTAssertEqual(Geohash("u1pb")!.neighborAtDirection(Direction.Bottom), Geohash("u0zz")!)
+        XCTAssertEqual(Geohash("u1pb")!.bottomNeighbor(), Geohash("u0zz")!)
     }
 
 
@@ -88,7 +84,7 @@ class GeohashTests: XCTestCase {
     }
 
     func testContainsLocation() {
-        let geohash = Geohash("dre7")
+        let geohash = Geohash("dre7")!
         let center = geohash.center()
         XCTAssertTrue(geohash.containsLocation(center), "Geohash contains own center")
 
@@ -102,13 +98,16 @@ class GeohashTests: XCTestCase {
     }
 
     func testContainsNearLongitudeBoundary() {
-        let geohash = Geohash(
-            location: CLLocationCoordinate2D(latitude: -25, longitude: -179), length: 1)
+        if let geohash = Geohash(
+                location: CLLocationCoordinate2D(latitude: -25, longitude: -179), length: 1) {
 
-        XCTAssertFalse(geohash.containsLocation(
-            CLLocationCoordinate2D(latitude: -25, longitude: 179)))
+            XCTAssertFalse(geohash.containsLocation(
+                CLLocationCoordinate2D(latitude: -25, longitude: 179)))
 
-        XCTAssertTrue(geohash.containsLocation(
-            CLLocationCoordinate2D(latitude: -25, longitude: -178)))
+            XCTAssertTrue(geohash.containsLocation(
+                CLLocationCoordinate2D(latitude: -25, longitude: -178)))
+        } else {
+            XCTFail("Could not initialize geohash")
+        }
     }
 }

@@ -4,6 +4,9 @@
 //  Created by Vy-Shane Sin Fat on 4/09/2014.
 //  Copyright (c) 2014 Vy-Shane Sin Fat. All rights reserved.
 //
+//
+//  TODO: Figure out what to do with failable initializers, optionals, force unwrapping, and how to
+//        handle errors.
 
 import CoreLocation
 
@@ -19,19 +22,18 @@ public struct Geohash: Equatable {
 
     // MARK: - Initializers
 
-    public init(_ hash: String) {
-        assert(!hash.isEmpty, "Hash cannot be an empty string")
-        assert(Geohash.encoding.isDecodableString(hash), "Hash contains invalid characters")
-
+    public init?(_ hash: String) {
+        if !Geohash.isValidHash(hash) {
+            return nil
+        }
         self.hash = { () -> String in return hash.lowercaseString }
         self.length = { () -> Int in return countElements(hash) }
     }
 
-    public init(location: CLLocationCoordinate2D, length: Int) {
-        assert(length > 0, "length must be a positive integer")
-        assert(location.latitude >= -90 && location.latitude <= 90,
-            "latitude of location must be between -90 and 90 inclusive")
-
+    public init?(location: CLLocationCoordinate2D, length: Int) {
+        if !CLLocationCoordinate2DIsValid(location) || length <= 0 {
+            return nil
+        }
         self.hash = { () -> String in return Geohash.encodeLocation(location, hashLength: length) }
         self.length = { () -> Int in return length }
     }
@@ -39,9 +41,53 @@ public struct Geohash: Equatable {
 
     // MARK: - Geohash Encoding and Decoding
 
-    public static func encodeLocation(center: CLLocationCoordinate2D, hashLength: Int) -> String {
-        let longitude = Geohash.longitudeTo180(center.longitude)
-        let latitude = center.latitude
+    public static func isValidHash(hash: String) -> Bool {
+        return Geohash.encoding.isDecodableString(hash)
+    }
+
+    public static func decodeHash(hash: String) -> CLLocationCoordinate2D {
+
+        func refineInterval(interval: (CLLocationDegrees, CLLocationDegrees),
+            codeInDecimal: Int, mask: Int) -> (CLLocationDegrees, CLLocationDegrees) {
+
+            let (firstEntry, secondEntry) = interval
+            if (codeInDecimal & mask) != 0 {
+                return ((firstEntry + secondEntry) / 2, secondEntry)
+            } else {
+                return (firstEntry, (firstEntry + secondEntry) / 2)
+            }
+        }
+
+        var isEven = true
+        var latitudeInterval = (-90.0, 90.0)
+        var longitudeInterval = (-180.0, 180.0)
+
+        for character in hash {
+            switch Geohash.encoding.valueForCharacter(character) {
+            case .Ok(let value):
+                for mask in bits {
+                    if isEven {
+                        longitudeInterval = refineInterval(longitudeInterval, value(), mask)
+                    } else {
+                        latitudeInterval = refineInterval(latitudeInterval, value(), mask)
+                    }
+                    isEven = !isEven
+                }
+            case .Error:
+                NSException(name: "GeohashDecodingException",
+                    reason: "Invalid Geohash character", userInfo: nil).raise()
+            }
+        }
+
+        return CLLocationCoordinate2D(
+            latitude: (latitudeInterval.0 + latitudeInterval.1) / 2,
+            longitude: (longitudeInterval.0 + longitudeInterval.1) / 2
+        )
+    }
+
+    public static func encodeLocation(location: CLLocationCoordinate2D, hashLength: Int) -> String {
+        let longitude = Geohash.longitudeTo180(location.longitude)
+        let latitude = location.latitude
         var isEven = true
         var latitudeInterval = (-90.0, 90.0)
         var longitudeInterval = (-180.0, 180.0)
@@ -87,46 +133,6 @@ public struct Geohash: Equatable {
         return hash
     }
 
-    public static func decodeHash(hash: String) -> CLLocationCoordinate2D {
-
-        func refineInterval(interval: (CLLocationDegrees, CLLocationDegrees),
-            codeInDecimal: Int, mask: Int) -> (CLLocationDegrees, CLLocationDegrees) {
-
-            let (firstEntry, secondEntry) = interval
-            if (codeInDecimal & mask) != 0 {
-                return ((firstEntry + secondEntry) / 2, secondEntry)
-            } else {
-                return (firstEntry, (firstEntry + secondEntry) / 2)
-            }
-        }
-
-        var isEven = true
-        var latitudeInterval = (-90.0, 90.0)
-        var longitudeInterval = (-180.0, 180.0)
-
-        for character in hash {
-            switch Geohash.encoding.valueForCharacter(character) {
-            case .Ok(let value):
-                for mask in bits {
-                    if isEven {
-                        longitudeInterval = refineInterval(longitudeInterval, value(), mask)
-                    } else {
-                        latitudeInterval = refineInterval(latitudeInterval, value(), mask)
-                    }
-                    isEven = !isEven
-                }
-            case .Error:
-                NSException(name: "GeohashDecodingException",
-                    reason: "Invalid Geohash character", userInfo: nil).raise()
-            }
-        }
-
-        return CLLocationCoordinate2D(
-            latitude: (latitudeInterval.0 + latitudeInterval.1) / 2,
-            longitude: (longitudeInterval.0 + longitudeInterval.1) / 2
-        )
-    }
-
 
     // MARK: - Finding Adjacent Geohashes
 
@@ -139,21 +145,21 @@ public struct Geohash: Equatable {
             switch direction {
             case .Right:
                 let adjacent = CLLocationCoordinate2D(latitude: center.latitude, longitude: -180)
-                return Geohash(location:adjacent, length: hashLength)
+                return Geohash(location:adjacent, length: hashLength)!
             case .Left:
                 let adjacent = CLLocationCoordinate2D(latitude: center.latitude, longitude: 180)
-                return Geohash(location:adjacent, length: hashLength)
+                return Geohash(location:adjacent, length: hashLength)!
             case _:
                 // Top or bottom.
                 let adjacent = CLLocationCoordinate2D(latitude: center.latitude,
                     longitude: center.longitude + 180)
-                return Geohash(location:adjacent, length: hashLength)
+                return Geohash(location:adjacent, length: hashLength)!
             }
         } else {
             let parity = Parity(forLength: hashLength)
             let lastCharacter = Character(hash.substringFromIndex(
                 hash.endIndex.predecessor()))
-            var base = Geohash(hash.substringToIndex(hash.endIndex.predecessor()))
+            var base = Geohash(hash.substringToIndex(hash.endIndex.predecessor()))!
 
             let borderEncoding = borderEncodingForDirection(direction, parity: parity)
             if borderEncoding.isDecodableString(String(lastCharacter)) {
@@ -166,7 +172,7 @@ public struct Geohash: Equatable {
             case .Ok(let neighborValue):
                 switch Geohash.encoding.characterForValue(neighborValue()) {
                 case .Ok(let base32Character):
-                    base = Geohash(base.hash() + String(base32Character()))
+                    base = Geohash(base.hash() + String(base32Character()))!
                 case .Error(let error):
                     // This shouldn't happen.
                     NSException(name: "GeohashEncodingException",
