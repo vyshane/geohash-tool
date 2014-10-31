@@ -13,12 +13,13 @@ struct HashEncoding {
         self.hashMap = hashMap
     }
 
-    func isDecodableString(string: String) -> Bool {
-        if string.isEmpty {
-            return false
-        }
+    func validCharacters() -> String {
+        return self.hashMap
+    }
+
+    func isValidString(string: String) -> Bool {
         for character in string {
-            if find(hashMap, character) == nil {
+            if find(self.hashMap, character) == nil {
                 return false
             }
         }
@@ -26,18 +27,18 @@ struct HashEncoding {
     }
 
     func valueForCharacter(character: Character) -> Result<Int> {
-        if let characterIndex = find(hashMap, character) {
-            return .Ok(distance(hashMap.startIndex, characterIndex))
+        if let characterIndex = find(self.hashMap, character) {
+            return .Ok(distance(self.hashMap.startIndex, characterIndex))
         } else {
             return .Error(GeohashError.GeohashEncodingInvalidCharacter.error())
         }
     }
 
     func characterForValue(value: Int) -> Result<Character> {
-        if value < 0 || value >= countElements(hashMap) {
+        if value < 0 || value >= countElements(self.hashMap) {
             return .Error(GeohashError.GeohashEncodingNonBase32Value.error())
         } else {
-            return .Ok(hashMap[advance(hashMap.startIndex, value)])
+            return .Ok(self.hashMap[advance(self.hashMap.startIndex, value)])
         }
     }
 }

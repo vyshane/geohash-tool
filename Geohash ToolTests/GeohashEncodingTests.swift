@@ -16,12 +16,12 @@ class GeohashEncodingTests: XCTestCase {
     let geohashEncoding = Geohash.encoding
 
     func testIsValidString() {
-        XCTAssert(geohashEncoding.isDecodableString("0123456789bcdefghjkmnpqrstuvwxyz"),
-            "\"0123456789bcdefghjkmnpqrstuvwxyz\" is a valid Geohash string")
-        XCTAssert(!geohashEncoding.isDecodableString("ailo"),
-            "\"ailo\" is not a valid Geohash string")
-        XCTAssert(!geohashEncoding.isDecodableString(""),
-            "An empty string is not a valid Geohash string")
+        XCTAssertTrue(geohashEncoding.isValidString("0123456789bcdefghjkmnpqrstuvwxyz"))
+        XCTAssertTrue(geohashEncoding.isValidString(""))
+        XCTAssertFalse(geohashEncoding.isValidString("a"))
+        XCTAssertFalse(geohashEncoding.isValidString("i"))
+        XCTAssertFalse(geohashEncoding.isValidString("l"))
+        XCTAssertFalse(geohashEncoding.isValidString("o"))
     }
     
     func testValueForCharacter() {

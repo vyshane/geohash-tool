@@ -4,9 +4,6 @@
 //  Created by Vy-Shane Sin Fat on 4/09/2014.
 //  Copyright (c) 2014 Vy-Shane Sin Fat. All rights reserved.
 //
-//
-//  TODO: Figure out what to do with failable initializers, optionals, force unwrapping, and how to
-//        handle errors.
 
 import CoreLocation
 
@@ -42,10 +39,12 @@ public struct Geohash: Equatable {
     // MARK: - Geohash Encoding and Decoding
 
     public static func isValidHash(hash: String) -> Bool {
-        return Geohash.encoding.isDecodableString(hash)
+        return Geohash.encoding.isValidString(hash)
     }
 
     public static func decodeHash(hash: String) -> CLLocationCoordinate2D {
+        assert(Geohash.encoding.isValidString(hash), "Hash contains invalid characters. " +
+            "Only the following characters are valid: " + Geohash.encoding.validCharacters())
 
         func refineInterval(interval: (CLLocationDegrees, CLLocationDegrees),
             codeInDecimal: Int, mask: Int) -> (CLLocationDegrees, CLLocationDegrees) {
@@ -86,6 +85,10 @@ public struct Geohash: Equatable {
     }
 
     public static func encodeLocation(location: CLLocationCoordinate2D, hashLength: Int) -> String {
+        assert(CLLocationCoordinate2DIsValid(location), "Location must be a valid " +
+            "CLLocationCoordinate2D")
+        assert(hashLength > 0, "Hash length must be a positive integer")
+
         let longitude = Geohash.longitudeTo180(location.longitude)
         let latitude = location.latitude
         var isEven = true
@@ -156,13 +159,19 @@ public struct Geohash: Equatable {
                 return Geohash(location:adjacent, length: hashLength)!
             }
         } else {
-            let parity = Parity(forLength: hashLength)
+            let parity = Parity(hashLength)
             let lastCharacter = Character(hash.substringFromIndex(
                 hash.endIndex.predecessor()))
-            var base = Geohash(hash.substringToIndex(hash.endIndex.predecessor()))!
+
+            var base: Geohash
+            if countElements(hash) == 1 {
+                base = Geohash("")!
+            } else {
+                base = Geohash(hash.substringToIndex(hash.endIndex.predecessor()))!
+            }
 
             let borderEncoding = borderEncodingForDirection(direction, parity: parity)
-            if borderEncoding.isDecodableString(String(lastCharacter)) {
+            if borderEncoding.isValidString(String(lastCharacter)) {
                 base = base.neighborAtDirection(direction)
             }
 
@@ -203,6 +212,25 @@ public struct Geohash: Equatable {
 
     public func bottomNeighbor() -> Geohash {
         return neighborAtDirection(Direction.Bottom)
+    }
+
+    /**
+    :returns: An array of neighboring geohashes. Geohashes are ordered clockwise starting from the
+              northwest position.
+    */
+    public func neighbors() -> [Geohash] {
+        let leftNeighbor = self.leftNeighbor()
+        let rightNeighbor = self.rightNeighbor()
+        return [
+            leftNeighbor.topNeighbor(),
+            self.topNeighbor(),
+            rightNeighbor.topNeighbor(),
+            rightNeighbor,
+            rightNeighbor.bottomNeighbor(),
+            self.bottomNeighbor(),
+            leftNeighbor.bottomNeighbor(),
+            leftNeighbor
+        ]
     }
 
 

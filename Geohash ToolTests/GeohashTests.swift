@@ -14,6 +14,15 @@ class GeohashTests: XCTestCase {
 
     // MARK: - Geohash Encoding and Decoding
 
+    func testIsValidHash() {
+        XCTAssertTrue(Geohash.isValidHash(""), "Zero-length hash covers the whole world.")
+        XCTAssertTrue(Geohash.isValidHash("0123456789bcdefghjkmnpqrstuvwxyz"))
+        XCTAssertFalse(Geohash.isValidHash("a"))
+        XCTAssertFalse(Geohash.isValidHash("i"))
+        XCTAssertFalse(Geohash.isValidHash("l"))
+        XCTAssertFalse(Geohash.isValidHash("o"))
+    }
+
     func testEncode() {
         let perthLocation = CLLocationCoordinate2D(latitude: -31.953, longitude: 115.857)
         if let perthGeohash = Geohash(location: perthLocation, length: 8) {
@@ -28,9 +37,9 @@ class GeohashTests: XCTestCase {
     }
 
     func testDecode() {
-        let perthGeohash = Geohash("qd66hrhk")
-        XCTAssertEqual(String(format: "%.3f", perthGeohash!.center().latitude) == "-31.953",
-            String(format: "%.3f", perthGeohash!.center().longitude) == "115.857")
+        let perthGeohash = Geohash("qd66hrhk")!
+        XCTAssertEqual(String(format: "%.3f", perthGeohash.center().latitude) == "-31.953",
+            String(format: "%.3f", perthGeohash.center().longitude) == "115.857")
 
         let whiteHouseLocation = CLLocationCoordinate2D(latitude: 38.89710201881826,
             longitude: -77.03669792041183)
@@ -60,6 +69,19 @@ class GeohashTests: XCTestCase {
     func testGeohashAtDirectionBottom() {
         XCTAssertEqual(Geohash("u1pb")!.neighborAtDirection(Direction.Bottom), Geohash("u0zz")!)
         XCTAssertEqual(Geohash("u1pb")!.bottomNeighbor(), Geohash("u0zz")!)
+    }
+
+    func testNeighbors() {
+        XCTAssertEqual(
+            Geohash("e")!.neighbors(),
+            [Geohash("f")!, Geohash("g")!, Geohash("u")!, Geohash("s")!,
+                Geohash("k")!, Geohash("7")!, Geohash("6")!, Geohash("d")!]
+        )
+        XCTAssertEqual(
+            Geohash("d3")!.neighbors(),
+            [Geohash("d4")!, Geohash("d6")!, Geohash("dd")!, Geohash("d9")!,
+                Geohash("d8")!, Geohash("d2")!, Geohash("d0")!, Geohash("d1")!]
+        )
     }
 
 
