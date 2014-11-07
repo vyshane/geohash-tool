@@ -15,6 +15,10 @@
 		3412D3A119CB306F00CA8447 /* Parity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3412D3A019CB306F00CA8447 /* Parity.swift */; };
 		3437ADFE19DA45FB00BE371E /* HashEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3437ADFD19DA45FB00BE371E /* HashEncoding.swift */; };
 		3437ADFF19DA45FB00BE371E /* HashEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3437ADFD19DA45FB00BE371E /* HashEncoding.swift */; };
+		3457AB011A0D109400C67ACD /* Longitude.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3457AB001A0D109400C67ACD /* Longitude.swift */; };
+		3457AB021A0D149900C67ACD /* Longitude.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3457AB001A0D109400C67ACD /* Longitude.swift */; };
+		3457AB041A0D150F00C67ACD /* LongitudeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3457AB031A0D150F00C67ACD /* LongitudeTests.swift */; };
+		347A78D01A00E5BC007F2FBC /* Coverage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 347A78CF1A00E5BC007F2FBC /* Coverage.swift */; };
 		3492CA9519DA723D005173BB /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3492CA9419DA723D005173BB /* Result.swift */; };
 		34A7CBB319B75FE80012606F /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A7CBB219B75FE80012606F /* main.swift */; };
 		34A7CBB519B75FE80012606F /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A7CBB419B75FE80012606F /* MapViewController.swift */; };
@@ -26,7 +30,7 @@
 		34BAF16619B8A24E00B00AF8 /* Geohash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34BAF16519B8A24E00B00AF8 /* Geohash.swift */; };
 		34C3150619DABA4000F968D8 /* GeohashError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C3150519DABA4000F968D8 /* GeohashError.swift */; };
 		34C3150719DABA4000F968D8 /* GeohashError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C3150519DABA4000F968D8 /* GeohashError.swift */; };
-		34C3150A19DB069A00F968D8 /* GeohashEncodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C3150819DB069A00F968D8 /* GeohashEncodingTests.swift */; };
+		34C3150A19DB069A00F968D8 /* HashEncodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C3150819DB069A00F968D8 /* HashEncodingTests.swift */; };
 		34C3150C19DB0D8A00F968D8 /* GeohashTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C3150B19DB0D8A00F968D8 /* GeohashTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -44,6 +48,9 @@
 		3412D39E19CB2FCE00CA8447 /* Direction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Direction.swift; sourceTree = "<group>"; };
 		3412D3A019CB306F00CA8447 /* Parity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Parity.swift; sourceTree = "<group>"; };
 		3437ADFD19DA45FB00BE371E /* HashEncoding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HashEncoding.swift; sourceTree = "<group>"; };
+		3457AB001A0D109400C67ACD /* Longitude.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Longitude.swift; sourceTree = "<group>"; };
+		3457AB031A0D150F00C67ACD /* LongitudeTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LongitudeTests.swift; sourceTree = "<group>"; };
+		347A78CF1A00E5BC007F2FBC /* Coverage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Coverage.swift; sourceTree = "<group>"; };
 		3492CA9419DA723D005173BB /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		34A7CBAD19B75FE80012606F /* Geohash Tool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Geohash Tool.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		34A7CBB119B75FE80012606F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -59,7 +66,7 @@
 		34A7CBD319B7665F0012606F /* Geohash Tool.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Geohash Tool.entitlements"; sourceTree = "<group>"; };
 		34BAF16519B8A24E00B00AF8 /* Geohash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Geohash.swift; sourceTree = "<group>"; };
 		34C3150519DABA4000F968D8 /* GeohashError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeohashError.swift; sourceTree = "<group>"; };
-		34C3150819DB069A00F968D8 /* GeohashEncodingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeohashEncodingTests.swift; sourceTree = "<group>"; };
+		34C3150819DB069A00F968D8 /* HashEncodingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HashEncodingTests.swift; sourceTree = "<group>"; };
 		34C3150B19DB0D8A00F968D8 /* GeohashTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeohashTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -127,9 +134,10 @@
 		34A7CBC419B75FE80012606F /* Geohash ToolTests */ = {
 			isa = PBXGroup;
 			children = (
-				34C3150819DB069A00F968D8 /* GeohashEncodingTests.swift */,
 				34C3150B19DB0D8A00F968D8 /* GeohashTests.swift */,
 				34A7CBC719B75FE80012606F /* Geohash_ToolTests.swift */,
+				34C3150819DB069A00F968D8 /* HashEncodingTests.swift */,
+				3457AB031A0D150F00C67ACD /* LongitudeTests.swift */,
 				34A7CBC519B75FE80012606F /* Supporting Files */,
 			);
 			path = "Geohash ToolTests";
@@ -152,6 +160,8 @@
 				3437ADFD19DA45FB00BE371E /* HashEncoding.swift */,
 				3492CA9419DA723D005173BB /* Result.swift */,
 				34C3150519DABA4000F968D8 /* GeohashError.swift */,
+				347A78CF1A00E5BC007F2FBC /* Coverage.swift */,
+				3457AB001A0D109400C67ACD /* Longitude.swift */,
 			);
 			name = GeohashKit;
 			sourceTree = "<group>";
@@ -262,6 +272,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				34A7CBB719B75FE80012606F /* AppDelegate.swift in Sources */,
+				3457AB011A0D109400C67ACD /* Longitude.swift in Sources */,
+				347A78D01A00E5BC007F2FBC /* Coverage.swift in Sources */,
 				3437ADFE19DA45FB00BE371E /* HashEncoding.swift in Sources */,
 				34A7CBB519B75FE80012606F /* MapViewController.swift in Sources */,
 				3412D3A119CB306F00CA8447 /* Parity.swift in Sources */,
@@ -278,13 +290,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				340CBAF719DA7DD700B87DFF /* Parity.swift in Sources */,
+				3457AB021A0D149900C67ACD /* Longitude.swift in Sources */,
 				340CBAF619DA7DD300B87DFF /* Result.swift in Sources */,
 				3437ADFF19DA45FB00BE371E /* HashEncoding.swift in Sources */,
 				34C3150719DABA4000F968D8 /* GeohashError.swift in Sources */,
+				3457AB041A0D150F00C67ACD /* LongitudeTests.swift in Sources */,
 				340CBAF919DA7DDC00B87DFF /* Geohash.swift in Sources */,
 				34C3150C19DB0D8A00F968D8 /* GeohashTests.swift in Sources */,
 				340CBAF819DA7DD900B87DFF /* Direction.swift in Sources */,
-				34C3150A19DB069A00F968D8 /* GeohashEncodingTests.swift in Sources */,
+				34C3150A19DB069A00F968D8 /* HashEncodingTests.swift in Sources */,
 				34A7CBC819B75FE80012606F /* Geohash_ToolTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
