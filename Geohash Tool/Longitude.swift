@@ -22,8 +22,8 @@ struct Longitude {
         }
     }
 
-    static func diff(longitude1: CLLocationDegrees, longitude2: CLLocationDegrees)
+    static func differenceBetween(first: CLLocationDegrees, and: CLLocationDegrees)
         -> CLLocationDegrees {
-        return abs(Longitude.to180(Longitude.to180(longitude1) - Longitude.to180(longitude2)))
+        return abs(Longitude.to180(Longitude.to180(first) - Longitude.to180(and)))
     }
 }

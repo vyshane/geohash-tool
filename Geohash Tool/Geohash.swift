@@ -269,8 +269,8 @@ public struct Geohash: Equatable {
     // MARK: - Utility Methods
 
     private func isLocation(location: CLLocationCoordinate2D, atBorderInDirection: Direction,
-        forHashLength: Int) -> Bool {
-
+        forHashLength: Int) -> Bool
+    {
         let width = Geohash.widthForHashLength(forHashLength)
 
         switch (atBorderInDirection) {
@@ -286,8 +286,8 @@ public struct Geohash: Equatable {
     }
 
     private func neighborEncodingForDirection(direction: Direction, parity: Parity)
-        -> HashEncoding {
-
+        -> HashEncoding
+    {
         switch (direction, parity) {
         case (Direction.Right, Parity.Even):
             return HashEncoding("bc01fg45238967deuvhjyznpkmstqrwx")
@@ -309,8 +309,8 @@ public struct Geohash: Equatable {
     }
 
     private func borderEncodingForDirection(direction: Direction, parity: Parity)
-        -> HashEncoding {
-
+        -> HashEncoding
+    {
         switch (direction, parity) {
         case (Direction.Right, Parity.Even):
             return HashEncoding("bcfguvyz")
