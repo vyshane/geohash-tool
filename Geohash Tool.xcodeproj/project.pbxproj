@@ -33,6 +33,7 @@
 		34C3150A19DB069A00F968D8 /* HashEncodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C3150819DB069A00F968D8 /* HashEncodingTests.swift */; };
 		34C3150C19DB0D8A00F968D8 /* GeohashTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C3150B19DB0D8A00F968D8 /* GeohashTests.swift */; };
 		34C7AD1E1A132A6500601CE9 /* CoverageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C7AD1D1A132A6500601CE9 /* CoverageTests.swift */; };
+		34C7AD1F1A13A87900601CE9 /* Coverage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 347A78CF1A00E5BC007F2FBC /* Coverage.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -292,6 +293,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				34C7AD1F1A13A87900601CE9 /* Coverage.swift in Sources */,
 				340CBAF719DA7DD700B87DFF /* Parity.swift in Sources */,
 				34C7AD1E1A132A6500601CE9 /* CoverageTests.swift in Sources */,
 				3457AB021A0D149900C67ACD /* Longitude.swift in Sources */,

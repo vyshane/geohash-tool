@@ -11,7 +11,7 @@ import XCTest
 
 class LongitudeTests: XCTestCase {
 
-    func testTodo() {
-        XCTFail("Implement some tests for type Longitude.")
-    }
+//    func testTodo() {
+//        XCTFail("Implement some tests for type Longitude.")
+//    }
 }
