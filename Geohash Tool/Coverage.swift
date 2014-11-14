@@ -21,7 +21,7 @@ public struct Coverage {
         desiredBottomRight: CLLocationCoordinate2D, hashLength: Int)
     {
         if !CLLocationCoordinate2DIsValid(desiredTopLeft) ||
-            !CLLocationCoordinate2DIsValid(desiredBottomRight) || hashLength <= 1 {
+            !CLLocationCoordinate2DIsValid(desiredBottomRight) || hashLength < 1 {
             return nil
         }
 
@@ -82,7 +82,7 @@ public struct Coverage {
         maxGeohashes: Int)
     {
         if !CLLocationCoordinate2DIsValid(desiredTopLeft) ||
-            !CLLocationCoordinate2DIsValid(desiredBottomRight) || maxGeohashes <= 1 {
+            !CLLocationCoordinate2DIsValid(desiredBottomRight) || maxGeohashes < 1 {
             return nil
         }
 
@@ -120,9 +120,11 @@ public struct Coverage {
     private static func hashLengthToCoverBoundingBoxWithTopLeft(topLeft: CLLocationCoordinate2D,
         bottomRight: CLLocationCoordinate2D) -> Int?
     {
-        for length in Coverage.maxHashLength...1 {
-            if let _ = Geohash(location: topLeft, length: length)?.containsLocation(bottomRight) {
-                return length
+        for var length = Coverage.maxHashLength; length > 0; --length {
+            if let geohash = Geohash(location: topLeft, length: length) {
+                if geohash.containsLocation(bottomRight) {
+                    return length
+                }
             }
         }
         return nil

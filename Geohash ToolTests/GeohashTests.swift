@@ -12,6 +12,8 @@ import CoreLocation
 
 class GeohashTests: XCTestCase {
 
+    let accuracy = 0.00001
+
     // MARK: - Geohash Encoding and Decoding
 
     func testIsValidHash() {
@@ -88,21 +90,21 @@ class GeohashTests: XCTestCase {
     // MARK: - Bounding Box
 
     func testWidthForHashLength() {
-        XCTAssertEqualWithAccuracy(Geohash.widthForHashLength(1), 45.0, 0.00001)
-        XCTAssertEqualWithAccuracy(Geohash.widthForHashLength(2), 11.25, 0.00001)
-        XCTAssertEqualWithAccuracy(Geohash.widthForHashLength(3), 1.40625, 0.00001)
-        XCTAssertEqualWithAccuracy(Geohash.widthForHashLength(4), 0.3515625, 0.00001)
-        XCTAssertEqualWithAccuracy(Geohash.widthForHashLength(5), 0.0439453125, 0.00001)
-        XCTAssertEqualWithAccuracy(Geohash.widthForHashLength(6), 0.010986328125, 0.00001)
+        XCTAssertEqualWithAccuracy(Geohash.widthForHashLength(1), 45.0, accuracy)
+        XCTAssertEqualWithAccuracy(Geohash.widthForHashLength(2), 11.25, accuracy)
+        XCTAssertEqualWithAccuracy(Geohash.widthForHashLength(3), 1.40625, accuracy)
+        XCTAssertEqualWithAccuracy(Geohash.widthForHashLength(4), 0.3515625, accuracy)
+        XCTAssertEqualWithAccuracy(Geohash.widthForHashLength(5), 0.0439453125, accuracy)
+        XCTAssertEqualWithAccuracy(Geohash.widthForHashLength(6), 0.010986328125, accuracy)
     }
 
     func testHeightForHashLength() {
-        XCTAssertEqualWithAccuracy(Geohash.heightForHashLength(1), 45.0, 0.00001)
-        XCTAssertEqualWithAccuracy(Geohash.heightForHashLength(2), 11.25 / 2, 0.00001)
-        XCTAssertEqualWithAccuracy(Geohash.heightForHashLength(3), 1.40625, 0.00001)
-        XCTAssertEqualWithAccuracy(Geohash.heightForHashLength(4), 0.3515625 / 2, 0.00001)
-        XCTAssertEqualWithAccuracy(Geohash.heightForHashLength(5), 0.0439453125, 0.00001)
-        XCTAssertEqualWithAccuracy(Geohash.heightForHashLength(6), 0.010986328125 / 2, 0.00001)
+        XCTAssertEqualWithAccuracy(Geohash.heightForHashLength(1), 45.0, accuracy)
+        XCTAssertEqualWithAccuracy(Geohash.heightForHashLength(2), 11.25 / 2, accuracy)
+        XCTAssertEqualWithAccuracy(Geohash.heightForHashLength(3), 1.40625, accuracy)
+        XCTAssertEqualWithAccuracy(Geohash.heightForHashLength(4), 0.3515625 / 2, accuracy)
+        XCTAssertEqualWithAccuracy(Geohash.heightForHashLength(5), 0.0439453125, accuracy)
+        XCTAssertEqualWithAccuracy(Geohash.heightForHashLength(6), 0.010986328125 / 2, accuracy)
     }
 
     func testContainsLocation() {

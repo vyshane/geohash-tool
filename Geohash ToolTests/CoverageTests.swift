@@ -11,9 +11,17 @@ import XCTest
 
 class CoverageTests: XCTestCase {
 
+    let accuracy = 0.000000001
     let hartford = CLLocationCoordinate2DMake(41.842967, -72.727175)
     let schenectady = CLLocationCoordinate2DMake(42.819581, -73.950691)
-    let precision = 0.000000001
+
+    func testCoverageWithHashLength1AroundBoston() {
+        let coverage = Coverage(desiredTopLeft: schenectady, desiredBottomRight: hartford,
+            hashLength: 1)
+
+        XCTAssertEqual(coverage!.geohashes, [Geohash("d")!])
+        XCTAssertEqualWithAccuracy(coverage!.ratio, 1694.6984366342194, accuracy)
+    }
 
     func testCoverageWithHashLength4AroundBoston() {
         var expectedGeohashes: [Geohash] = []
@@ -52,6 +60,22 @@ class CoverageTests: XCTestCase {
         let coverage = Coverage(desiredTopLeft: schenectady, desiredBottomRight: hartford,
             hashLength: 4)
 
-        XCTAssert(expectedGeohashes == coverage!.geohashes)
+        XCTAssertEqual(coverage!.geohashes, expectedGeohashes)
+    }
+
+    func testCoverageWithOptimalHashLengthAroundBoston() {
+        let coverage = Coverage(desiredTopLeft: schenectady, desiredBottomRight: hartford,
+            maxGeohashes: 10)
+
+        XCTAssertEqual(coverage!.geohashes.count, 4)
+        XCTAssertEqual(coverage!.geohashes[0].length(), 3)
+    }
+
+    func testCoverageWithMaxHashes1AroundBoston() {
+        let coverage = Coverage(desiredTopLeft: schenectady, desiredBottomRight: hartford,
+            maxGeohashes: 1)
+
+        XCTAssertEqual(coverage!.geohashes.count, 1)
+        XCTAssertEqual(coverage!.geohashes[0].length(), 2)
     }
 }
