@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Vy-Shane Sin Fat. All rights reserved.
 //
 
-import CoreLocation
+import MapKit
 
 public struct Coverage {
 
@@ -31,15 +31,18 @@ public struct Coverage {
             and: desiredTopLeft.longitude)
         let maxLongitude = desiredTopLeft.longitude + longitudeDifference
 
-        // FIXME: Clean this up.
         var geohashes: [Geohash] = []
-        func addGeohash(latitude: CLLocationDegrees, longitude: CLLocationDegrees) {
+
+        func addGeohash(var geohashes: [Geohash], latitude: CLLocationDegrees,
+            longitude: CLLocationDegrees) -> [Geohash]
+        {
             let location = CLLocationCoordinate2DMake(latitude, longitude)
             if let geohash = Geohash(location: location, length: hashLength) {
                 if !contains(geohashes, geohash) {
                     geohashes.append(geohash)
                 }
             }
+            return geohashes
         }
 
         for var latitude = desiredBottomRight.latitude; latitude <= desiredTopLeft.latitude;
@@ -48,7 +51,7 @@ public struct Coverage {
             for var longitude = desiredTopLeft.longitude; longitude <= maxLongitude;
                 longitude += widthForHashLength
             {
-                addGeohash(latitude, longitude)
+                geohashes = addGeohash(geohashes, latitude, longitude)
             }
         }
 
@@ -56,17 +59,17 @@ public struct Coverage {
         for var latitude = desiredBottomRight.latitude; latitude <= desiredTopLeft.latitude;
             latitude += heightForHashLength
         {
-            addGeohash(latitude, maxLongitude)
+            geohashes = addGeohash(geohashes, latitude, maxLongitude)
         }
 
         for var longitude = desiredTopLeft.longitude; longitude <= maxLongitude;
             longitude += widthForHashLength
         {
-            addGeohash(desiredTopLeft.latitude, longitude)
+            geohashes = addGeohash(geohashes, desiredTopLeft.latitude, longitude)
         }
 
         // Include the top right corner.
-        addGeohash(desiredTopLeft.latitude, maxLongitude)
+        geohashes = addGeohash(geohashes, desiredTopLeft.latitude, maxLongitude)
 
         self.geohashes = geohashes.sorted { $0.hash() < $1.hash() }
 
@@ -114,8 +117,52 @@ public struct Coverage {
         }
     }
 
+    public init?(desiredRegion: MKCoordinateRegion, maxGeohashes: Int) {
+        let topLeft = Coverage.topLeftLocationForRegion(desiredRegion)
+        let bottomRight = Coverage.bottomRightLocationForRegion(desiredRegion)
+
+        if let coverage = Coverage(desiredTopLeft: topLeft, desiredBottomRight: bottomRight,
+            maxGeohashes: maxGeohashes)
+        {
+            self = coverage
+        } else {
+            return nil
+        }
+    }
+
+    public init?(desiredRegion: MKCoordinateRegion, hashLength: Int) {
+        let topLeft = Coverage.topLeftLocationForRegion(desiredRegion)
+        let bottomRight = Coverage.bottomRightLocationForRegion(desiredRegion)
+
+        if let coverage = Coverage(desiredTopLeft: topLeft, desiredBottomRight: bottomRight,
+            hashLength: hashLength)
+        {
+            self = coverage
+        } else {
+            return nil
+        }
+    }
+
 
     // MARK: - Utility methods
+
+    private static func topLeftLocationForRegion(region: MKCoordinateRegion)
+        -> CLLocationCoordinate2D
+    {
+        let topLeftLatitude = region.center.latitude - (region.span.latitudeDelta / 2)
+        let topLeftLongitude = Longitude.to180(region.center.longitude -
+            (region.span.longitudeDelta / 2))
+        return CLLocationCoordinate2DMake(topLeftLatitude, topLeftLongitude)
+    }
+
+    private static func bottomRightLocationForRegion(region: MKCoordinateRegion)
+        -> CLLocationCoordinate2D
+    {
+        let bottomRightLatitude = region.center.latitude + (region.span.latitudeDelta / 2)
+        let bottomRightLongitude = Longitude.to180(region.center.longitude +
+            (region.span.longitudeDelta / 2))
+        return CLLocationCoordinate2DMake(bottomRightLatitude, bottomRightLongitude)
+    }
 
     private static func hashLengthToCoverBoundingBoxWithTopLeft(topLeft: CLLocationCoordinate2D,
         bottomRight: CLLocationCoordinate2D) -> Int?

@@ -5,7 +5,7 @@
 //  Copyright (c) 2014 Vy-Shane Sin Fat. All rights reserved.
 //
 
-import CoreLocation
+import MapKit
 
 public struct Geohash: Equatable {
 
@@ -236,8 +236,36 @@ public struct Geohash: Equatable {
 
     // MARK: - Bounding Box
 
+    public func polygon() -> MKPolygon {
+        var coordinates = [topLeft(), topRight(), bottomRight(), bottomLeft()]
+        return MKPolygon(coordinates: &coordinates, count: 4)
+    }
+
+    public func region() -> MKCoordinateRegion {
+        let span = MKCoordinateSpanMake(height(), width())
+        return MKCoordinateRegionMake(center(), span)
+    }
+
     public func center() -> CLLocationCoordinate2D {
         return Geohash.decodeHash(self.hash())
+    }
+
+    public func topLeft() -> CLLocationCoordinate2D {
+        return CLLocationCoordinate2DMake(center().latitude - (height() / 2),
+            Longitude.to180(center().longitude - (width() / 2)))
+    }
+
+    public func topRight() -> CLLocationCoordinate2D {
+        return CLLocationCoordinate2DMake(topLeft().latitude,
+            Longitude.to180(topLeft().longitude + width()))
+    }
+
+    public func bottomLeft() -> CLLocationCoordinate2D {
+        return CLLocationCoordinate2DMake(topLeft().latitude + height(), topLeft().longitude)
+    }
+
+    public func bottomRight() -> CLLocationCoordinate2D {
+        return CLLocationCoordinate2DMake(topRight().latitude + height(), topRight().longitude)
     }
 
     public func width() -> CLLocationDegrees {

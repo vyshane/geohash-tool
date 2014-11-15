@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="6206.9" systemVersion="14A329r" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="6249" systemVersion="14B23" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
-        <deployment defaultVersion="101000" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6206.9"/>
-        <plugIn identifier="com.apple.MapKitIBPlugin" version="6206.9"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6249"/>
+        <plugIn identifier="com.apple.MapKitIBPlugin" version="6249"/>
     </dependencies>
     <scenes>
         <!--Application-->
@@ -648,7 +647,7 @@
             </objects>
             <point key="canvasLocation" x="75" y="0.0"/>
         </scene>
-        <!--Window-->
+        <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
             <objects>
                 <windowController id="B8D-0N-5wS" sceneMemberID="viewController">
@@ -678,8 +677,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="800" height="600"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
+                            <mapView mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="coY-JE-kmo">
+                                <rect key="frame" x="0.0" y="38" width="800" height="565"/>
+                            </mapView>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="p9V-8d-TQR">
-                                <rect key="frame" x="12" y="6" width="118" height="25"/>
+                                <rect key="frame" x="670" y="6" width="118" height="25"/>
                                 <buttonCell key="cell" type="roundTextured" title="Current Location" bezelStyle="texturedRounded" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="POe-Tj-wGY">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -688,14 +690,11 @@
                                     <action selector="zoomToCurrentLocation:" target="XfG-lQ-9wD" id="V8Z-oR-fOW"/>
                                 </connections>
                             </button>
-                            <mapView mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="coY-JE-kmo">
-                                <rect key="frame" x="0.0" y="38" width="800" height="565"/>
-                            </mapView>
                         </subviews>
                         <constraints>
                             <constraint firstItem="coY-JE-kmo" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="1Ga-3e-DKr"/>
+                            <constraint firstAttribute="trailing" secondItem="p9V-8d-TQR" secondAttribute="trailing" constant="12" id="2A2-lm-1wu"/>
                             <constraint firstAttribute="bottom" secondItem="coY-JE-kmo" secondAttribute="bottom" constant="38" id="8G7-Vj-uZd"/>
-                            <constraint firstItem="p9V-8d-TQR" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="12" id="JT6-xi-aDd"/>
                             <constraint firstAttribute="trailing" secondItem="coY-JE-kmo" secondAttribute="trailing" id="KPX-AI-ljU"/>
                             <constraint firstItem="p9V-8d-TQR" firstAttribute="top" secondItem="coY-JE-kmo" secondAttribute="bottom" constant="8" id="LlI-KX-B70"/>
                             <constraint firstItem="coY-JE-kmo" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="aie-I7-6hR"/>
