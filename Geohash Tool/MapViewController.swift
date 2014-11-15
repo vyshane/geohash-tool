@@ -42,7 +42,7 @@ class MapViewController: NSViewController, MKMapViewDelegate {
     func mapView(mapView: MKMapView!, regionDidChangeAnimated animated: Bool) {
         self.mapView.removeOverlays(mapView.overlays)
 
-        if let coverage = Coverage(desiredRegion: mapView.region, maxGeohashes: 9) {
+        if let coverage = Coverage(desiredRegion: mapView.region, maxGeohashes: 8) {
             // Plot geohashes on the map.
             for geohash in coverage.geohashes {
                 self.mapView.addOverlay(geohash.polygon())

@@ -34,7 +34,7 @@ public struct Coverage {
         var geohashes: [Geohash] = []
 
         func addGeohash(var geohashes: [Geohash], latitude: CLLocationDegrees,
-            longitude: CLLocationDegrees) -> [Geohash]
+            longitude: CLLocationDegrees, hashLength: Int) -> [Geohash]
         {
             let location = CLLocationCoordinate2DMake(latitude, longitude)
             if let geohash = Geohash(location: location, length: hashLength) {
@@ -51,7 +51,7 @@ public struct Coverage {
             for var longitude = desiredTopLeft.longitude; longitude <= maxLongitude;
                 longitude += widthForHashLength
             {
-                geohashes = addGeohash(geohashes, latitude, longitude)
+                geohashes = addGeohash(geohashes, latitude, longitude, hashLength)
             }
         }
 
@@ -59,17 +59,17 @@ public struct Coverage {
         for var latitude = desiredBottomRight.latitude; latitude <= desiredTopLeft.latitude;
             latitude += heightForHashLength
         {
-            geohashes = addGeohash(geohashes, latitude, maxLongitude)
+            geohashes = addGeohash(geohashes, latitude, maxLongitude, hashLength)
         }
 
         for var longitude = desiredTopLeft.longitude; longitude <= maxLongitude;
             longitude += widthForHashLength
         {
-            geohashes = addGeohash(geohashes, desiredTopLeft.latitude, longitude)
+            geohashes = addGeohash(geohashes, desiredTopLeft.latitude, longitude, hashLength)
         }
 
         // Include the top right corner.
-        geohashes = addGeohash(geohashes, desiredTopLeft.latitude, maxLongitude)
+        geohashes = addGeohash(geohashes, desiredTopLeft.latitude, maxLongitude, hashLength)
 
         self.geohashes = geohashes.sorted { $0.hash() < $1.hash() }
 
@@ -149,7 +149,7 @@ public struct Coverage {
     private static func topLeftLocationForRegion(region: MKCoordinateRegion)
         -> CLLocationCoordinate2D
     {
-        let topLeftLatitude = region.center.latitude - (region.span.latitudeDelta / 2)
+        let topLeftLatitude = region.center.latitude + (region.span.latitudeDelta / 2)
         let topLeftLongitude = Longitude.to180(region.center.longitude -
             (region.span.longitudeDelta / 2))
         return CLLocationCoordinate2DMake(topLeftLatitude, topLeftLongitude)
@@ -158,7 +158,7 @@ public struct Coverage {
     private static func bottomRightLocationForRegion(region: MKCoordinateRegion)
         -> CLLocationCoordinate2D
     {
-        let bottomRightLatitude = region.center.latitude + (region.span.latitudeDelta / 2)
+        let bottomRightLatitude = region.center.latitude - (region.span.latitudeDelta / 2)
         let bottomRightLongitude = Longitude.to180(region.center.longitude +
             (region.span.longitudeDelta / 2))
         return CLLocationCoordinate2DMake(bottomRightLatitude, bottomRightLongitude)
