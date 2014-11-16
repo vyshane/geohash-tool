@@ -51,11 +51,11 @@ class MapViewController: NSViewController, MKMapViewDelegate {
     }
 
     func mapView(mapView: MKMapView!, rendererForOverlay overlay: MKOverlay!)
-        -> MKOverlayRenderer!
-    {
+                 -> MKOverlayRenderer! {
+
         if overlay.isKindOfClass(MKPolygon) {
             let renderer = MKPolygonRenderer(overlay: overlay)
-            renderer.strokeColor = NSColor.grayColor()
+            renderer.strokeColor = NSColor.blueColor()
             renderer.lineWidth = 1.5
             renderer.alpha = 0.5
             return renderer

@@ -18,8 +18,8 @@ public struct Coverage {
     // MARK: - Initializers
 
     public init?(desiredTopLeft: CLLocationCoordinate2D,
-        desiredBottomRight: CLLocationCoordinate2D, hashLength: Int)
-    {
+                 desiredBottomRight: CLLocationCoordinate2D, hashLength: Int) {
+
         if !CLLocationCoordinate2DIsValid(desiredTopLeft) ||
             !CLLocationCoordinate2DIsValid(desiredBottomRight) || hashLength < 1 {
             return nil
@@ -82,8 +82,8 @@ public struct Coverage {
     }
 
     public init?(desiredTopLeft: CLLocationCoordinate2D, desiredBottomRight: CLLocationCoordinate2D,
-        maxGeohashes: Int)
-    {
+                 maxGeohashes: Int) {
+
         if !CLLocationCoordinate2DIsValid(desiredTopLeft) ||
             !CLLocationCoordinate2DIsValid(desiredBottomRight) || maxGeohashes < 1 {
             return nil
@@ -147,8 +147,8 @@ public struct Coverage {
     // MARK: - Utility methods
 
     private static func topLeftLocationForRegion(region: MKCoordinateRegion)
-        -> CLLocationCoordinate2D
-    {
+                                                 -> CLLocationCoordinate2D {
+
         let topLeftLatitude = region.center.latitude + (region.span.latitudeDelta / 2)
         let topLeftLongitude = Longitude.to180(region.center.longitude -
             (region.span.longitudeDelta / 2))
@@ -156,8 +156,8 @@ public struct Coverage {
     }
 
     private static func bottomRightLocationForRegion(region: MKCoordinateRegion)
-        -> CLLocationCoordinate2D
-    {
+                                                     -> CLLocationCoordinate2D {
+
         let bottomRightLatitude = region.center.latitude - (region.span.latitudeDelta / 2)
         let bottomRightLongitude = Longitude.to180(region.center.longitude +
             (region.span.longitudeDelta / 2))
@@ -165,8 +165,9 @@ public struct Coverage {
     }
 
     private static func hashLengthToCoverBoundingBoxWithTopLeft(topLeft: CLLocationCoordinate2D,
-        bottomRight: CLLocationCoordinate2D) -> Int?
-    {
+                                                                bottomRight: CLLocationCoordinate2D)
+                                                                -> Int? {
+
         for var length = Coverage.maxHashLength; length > 0; --length {
             if let geohash = Geohash(location: topLeft, length: length) {
                 if geohash.containsLocation(bottomRight) {
