@@ -14,31 +14,31 @@ struct HashEncoding {
     }
 
     func validCharacters() -> String {
-        return self.hashMap
+        return hashMap
     }
 
     func isValidString(string: String) -> Bool {
         for character in string {
-            if find(self.hashMap, character) == nil {
+            if find(hashMap, character) == nil {
                 return false
             }
         }
         return true
     }
 
-    func valueForCharacter(character: Character) -> Result<Int> {
-        if let characterIndex = find(self.hashMap, character) {
-            return .Ok(distance(self.hashMap.startIndex, characterIndex))
+    func valueForCharacter(character: Character) -> Int? {
+        if let characterIndex = find(hashMap, character) {
+            return distance(hashMap.startIndex, characterIndex)
         } else {
-            return .Error(GeohashError.GeohashEncodingInvalidCharacter.error())
+            return nil
         }
     }
 
-    func characterForValue(value: Int) -> Result<Character> {
-        if value < 0 || value >= countElements(self.hashMap) {
-            return .Error(GeohashError.GeohashEncodingNonBase32Value.error())
+    func characterForValue(value: Int) -> Character? {
+        if value < 0 || value >= count(hashMap) {
+            return nil
         } else {
-            return .Ok(self.hashMap[advance(self.hashMap.startIndex, value)])
+            return hashMap[advance(hashMap.startIndex, value)]
         }
     }
 }

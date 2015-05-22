@@ -99,6 +99,8 @@ public struct Coverage {
         var coverage: Coverage?
 
         for length in startHashLength!...Coverage.maxHashLength {
+
+            // FIXME: Use self.init()
             if let attemptCoverage = Coverage(desiredTopLeft: desiredTopLeft,
                 desiredBottomRight: desiredBottomRight, hashLength: length)
             {
@@ -122,8 +124,7 @@ public struct Coverage {
         let bottomRight = Coverage.bottomRightLocationForRegion(desiredRegion)
 
         if let coverage = Coverage(desiredTopLeft: topLeft, desiredBottomRight: bottomRight,
-            maxGeohashes: maxGeohashes)
-        {
+                maxGeohashes: maxGeohashes) {
             self = coverage
         } else {
             return nil
@@ -135,8 +136,7 @@ public struct Coverage {
         let bottomRight = Coverage.bottomRightLocationForRegion(desiredRegion)
 
         if let coverage = Coverage(desiredTopLeft: topLeft, desiredBottomRight: bottomRight,
-            hashLength: hashLength)
-        {
+                hashLength: hashLength) {
             self = coverage
         } else {
             return nil

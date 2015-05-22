@@ -24,7 +24,7 @@ public struct Geohash: Equatable {
             return nil
         }
         self.hash = { () -> String in return hash.lowercaseString }
-        self.length = { () -> Int in return countElements(hash) }
+        self.length = { () -> Int in return count(hash) }
     }
 
     public init?(location: CLLocationCoordinate2D, length: Int) {
@@ -62,17 +62,17 @@ public struct Geohash: Equatable {
         var longitudeInterval = (-180.0, 180.0)
 
         for character in hash {
-            switch Geohash.encoding.valueForCharacter(character) {
-            case .Ok(let value):
+            if let value = Geohash.encoding.valueForCharacter(character) {
                 for mask in bits {
                     if isEven {
-                        longitudeInterval = refineInterval(longitudeInterval, value(), mask)
+                        longitudeInterval = refineInterval(longitudeInterval, value, mask)
                     } else {
-                        latitudeInterval = refineInterval(latitudeInterval, value(), mask)
+                        latitudeInterval = refineInterval(latitudeInterval, value, mask)
                     }
                     isEven = !isEven
                 }
-            case .Error:
+            } else {
+                // This shouldn't happen since we've already checked whether the string is a valid hash.
                 NSException(name: "GeohashDecodingException",
                     reason: "Invalid Geohash character", userInfo: nil).raise()
             }
@@ -98,7 +98,7 @@ public struct Geohash: Equatable {
         var bit = 0
         var characterIndex = 0
 
-        while countElements(hash) < hashLength {
+        while count(hash) < hashLength {
             if isEven {
                 let mid = (longitudeInterval.0 + longitudeInterval.1) / 2
                 if longitude >= mid {
@@ -121,10 +121,9 @@ public struct Geohash: Equatable {
             if bit < bits.count - 1 {
                 ++bit
             } else {
-                switch Geohash.encoding.characterForValue(characterIndex) {
-                case .Ok(let character):
-                    hash.append(character())
-                case .Error(_):
+                if let character = Geohash.encoding.characterForValue(characterIndex) {
+                    hash.append(character)
+                } else {
                     // This shouldn't happen.
                     NSException(name: "GeohashEncodingException",
                         reason: "Unable to encode non-base32 value", userInfo: nil).raise()
@@ -164,7 +163,7 @@ public struct Geohash: Equatable {
                 hash.endIndex.predecessor()))
 
             var base: Geohash
-            if countElements(hash) == 1 {
+            if count(hash) == 1 {
                 base = Geohash("")!
             } else {
                 base = Geohash(hash.substringToIndex(hash.endIndex.predecessor()))!
@@ -175,25 +174,23 @@ public struct Geohash: Equatable {
                 base = base.neighborAtDirection(direction)
             }
 
-            switch neighborEncodingForDirection(direction, parity: parity)
-                .valueForCharacter(lastCharacter) {
-
-            case .Ok(let neighborValue):
-                switch Geohash.encoding.characterForValue(neighborValue()) {
-                case .Ok(let base32Character):
-                    base = Geohash(base.hash() + String(base32Character()))!
-                case .Error(let error):
+            if let neighborValue = neighborEncodingForDirection(direction, parity: parity)
+                .valueForCharacter(lastCharacter)
+            {
+                if let base32Character = Geohash.encoding.characterForValue(neighborValue) {
+                    base = Geohash(base.hash() + String(base32Character))!
+                } else {
                     // This shouldn't happen.
                     NSException(name: "GeohashEncodingException",
                         reason: "Unable to encode Geohash from non-base32 value",
                         userInfo: nil).raise()
                 }
-
-            case .Error(_):
+            } else {
                 // This shouldn't happen.
                 NSException(name: "GeohashEncodingException",
                     reason: "Unable to decode neighbor value", userInfo: nil).raise()
             }
+            
             return base
         }
     }

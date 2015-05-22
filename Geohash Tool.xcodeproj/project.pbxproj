@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		340CBAF619DA7DD300B87DFF /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3492CA9419DA723D005173BB /* Result.swift */; };
 		340CBAF719DA7DD700B87DFF /* Parity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3412D3A019CB306F00CA8447 /* Parity.swift */; };
 		340CBAF819DA7DD900B87DFF /* Direction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3412D39E19CB2FCE00CA8447 /* Direction.swift */; };
 		340CBAF919DA7DDC00B87DFF /* Geohash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34BAF16519B8A24E00B00AF8 /* Geohash.swift */; };
@@ -19,7 +18,6 @@
 		3457AB021A0D149900C67ACD /* Longitude.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3457AB001A0D109400C67ACD /* Longitude.swift */; };
 		3457AB041A0D150F00C67ACD /* LongitudeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3457AB031A0D150F00C67ACD /* LongitudeTests.swift */; };
 		347A78D01A00E5BC007F2FBC /* Coverage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 347A78CF1A00E5BC007F2FBC /* Coverage.swift */; };
-		3492CA9519DA723D005173BB /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3492CA9419DA723D005173BB /* Result.swift */; };
 		34A7CBB319B75FE80012606F /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A7CBB219B75FE80012606F /* main.swift */; };
 		34A7CBB519B75FE80012606F /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A7CBB419B75FE80012606F /* MapViewController.swift */; };
 		34A7CBB719B75FE80012606F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A7CBB619B75FE80012606F /* AppDelegate.swift */; };
@@ -53,7 +51,6 @@
 		3457AB001A0D109400C67ACD /* Longitude.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Longitude.swift; sourceTree = "<group>"; };
 		3457AB031A0D150F00C67ACD /* LongitudeTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LongitudeTests.swift; sourceTree = "<group>"; };
 		347A78CF1A00E5BC007F2FBC /* Coverage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Coverage.swift; sourceTree = "<group>"; };
-		3492CA9419DA723D005173BB /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		34A7CBAD19B75FE80012606F /* Geohash Tool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Geohash Tool.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		34A7CBB119B75FE80012606F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		34A7CBB219B75FE80012606F /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
@@ -162,7 +159,6 @@
 				3412D39E19CB2FCE00CA8447 /* Direction.swift */,
 				3412D3A019CB306F00CA8447 /* Parity.swift */,
 				3437ADFD19DA45FB00BE371E /* HashEncoding.swift */,
-				3492CA9419DA723D005173BB /* Result.swift */,
 				34C3150519DABA4000F968D8 /* GeohashError.swift */,
 				347A78CF1A00E5BC007F2FBC /* Coverage.swift */,
 				3457AB001A0D109400C67ACD /* Longitude.swift */,
@@ -284,7 +280,6 @@
 				34C3150619DABA4000F968D8 /* GeohashError.swift in Sources */,
 				34A7CBB319B75FE80012606F /* main.swift in Sources */,
 				3412D39F19CB2FCE00CA8447 /* Direction.swift in Sources */,
-				3492CA9519DA723D005173BB /* Result.swift in Sources */,
 				34BAF16619B8A24E00B00AF8 /* Geohash.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -297,7 +292,6 @@
 				340CBAF719DA7DD700B87DFF /* Parity.swift in Sources */,
 				34C7AD1E1A132A6500601CE9 /* CoverageTests.swift in Sources */,
 				3457AB021A0D149900C67ACD /* Longitude.swift in Sources */,
-				340CBAF619DA7DD300B87DFF /* Result.swift in Sources */,
 				3437ADFF19DA45FB00BE371E /* HashEncoding.swift in Sources */,
 				34C3150719DABA4000F968D8 /* GeohashError.swift in Sources */,
 				3457AB041A0D150F00C67ACD /* LongitudeTests.swift in Sources */,
